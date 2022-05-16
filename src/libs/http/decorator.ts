@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import Http from "./index";
+// import Http from "@/api/http";
 import { HttpMethod } from "./types";
 
 const PATH = Symbol("path");
@@ -13,20 +13,16 @@ export function Controller(path: string): ClassDecorator {
 }
 
 function methodDecorator(method: HttpMethod) {
-  return <T, P>(path: string) => {
+  return (path: string) => {
     path = normalizePath(path);
-    return (
-      target: Function,
-      propertyKey: string,
-      descriptor: PropertyDescriptor
-    ) => {
+    return (target: Function, propertyKey: string) => {
       Reflect.defineMetadata(PATH, path, target.prototype, propertyKey);
       Reflect.defineMetadata(METHOD, method, target.prototype, propertyKey);
-      const func = descriptor.value;
-      descriptor.value = (data: T) => {
-        func(data);
-        return Http<T, P>({ url: target.path + path, method, data });
-      };
+      // const func = descriptor.value;
+      // descriptor.value = (data: T) => {
+      //   func(data);
+      //   return Http<T, P>({ url: target.path + path, method, data });
+      // };
     };
   };
 }

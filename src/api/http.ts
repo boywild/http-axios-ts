@@ -1,6 +1,6 @@
-import Request from "./request";
+import Request from "@/libs/http/request";
 // import type { AxiosResponse } from "axios";
-import type { HttpResponse, HttpConfig } from "./types";
+import type { HttpResponse, HttpConfig } from "@/libs/http/types";
 // 多baseUrl
 // 自定义Header
 // 自定义配置项

@@ -2,7 +2,6 @@
 import { ref, reactive, onMounted } from "vue";
 // import { getAddrs } from "@/api/Test";
 import Test from "@/api/Test";
-
 defineProps<{ msg: string }>();
 
 const count = ref(0);
