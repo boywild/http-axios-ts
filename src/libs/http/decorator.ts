@@ -1,6 +1,6 @@
 import "reflect-metadata";
 // import Http from "@/api/http";
-import { HttpMethod } from "./types";
+import type { Method } from "axios";
 
 const PATH = Symbol("path");
 const METHOD = Symbol("method");
@@ -12,7 +12,7 @@ export function Controller(path: string): ClassDecorator {
   };
 }
 
-function methodDecorator(method: HttpMethod) {
+function methodDecorator(method: Method) {
   return (path: string) => {
     path = normalizePath(path);
     return (target: Function, propertyKey: string) => {
@@ -34,11 +34,14 @@ function getMetaData(type: Symbol, target: Object, propertyKey?: string) {
   return Reflect.getMetadata(type, target) || "";
 }
 
-export function getPathMetaData(target: Object, propertyKey?: string) {
+export function getPathMetaData(target: Object, propertyKey?: string): string {
   return getMetaData(PATH, target, propertyKey);
 }
 
-export function getMethodMetaData(target: Object, propertyKey?: string) {
+export function getMethodMetaData(
+  target: Object,
+  propertyKey?: string
+): string {
   return getMetaData(METHOD, target, propertyKey);
 }
 
@@ -50,7 +53,7 @@ function normalizePath(path: string): string {
 export const Get = methodDecorator("GET");
 export const Post = methodDecorator("POST");
 export const Put = methodDecorator("PUT");
-export const Del = methodDecorator("DEL");
+export const Del = methodDecorator("DELETE");
 export const Head = methodDecorator("HEAD");
 export const Patch = methodDecorator("PATCH");
 export const Options = methodDecorator("OPTIONS");

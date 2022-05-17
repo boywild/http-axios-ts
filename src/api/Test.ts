@@ -1,12 +1,7 @@
-import "reflect-metadata";
 import Http from "./http";
-import Log from "@/libs/log";
-import {
-  Controller,
-  Get,
-  getPathMetaData,
-  getMethodMetaData,
-} from "@/libs/http/decorator";
+import { useHttpDecorator } from "./http";
+import { Controller, Get } from "@/libs/http/decorator";
+import type { RequestConfig } from "@/libs/http/types";
 import type { IGetParams, IGetRes } from "./interface";
 export type { IGetParams, IGetRes } from "./interface";
 
@@ -18,35 +13,27 @@ export type { IGetParams, IGetRes } from "./interface";
 //   });
 // };
 
-// @Reflect.metadata("name", "chentian")
 @Controller("/api")
 class Test {
   @Get("/top/artists")
-  static getAddrs(data: IGetParams) {
+  static getAddrs(data: IGetParams, config: RequestConfig) {
     console.log(data);
-    // return Http<IGetParams, IGetRes>({ data });
+    return Http<IGetParams, IGetRes>({ data, ...(config as {}) });
   }
 }
 
-function a(obj) {
-  let res = {};
-  const property = Object.getOwnPropertyNames(obj);
-  property.forEach((k) => {
-    if (k === "name" || k === "length" || k === "prototype") return;
-    const controller = getPathMetaData(obj.prototype);
-    const path = getPathMetaData(Test.prototype, k);
-    const method = getMethodMetaData(Test.prototype, k);
-    Log.log(method);
-    const url = controller + path;
-    Log.log(url);
-    res[k] = (data) => {
-      console.log(data);
-      return Http<IGetParams, IGetRes>({ method, url, data });
-    };
-  });
-  return res;
-}
-type ResType = typeof Test;
-const res: ResType = a(Test);
+// class Test2 {
+//   getAddrs: number;
+//   getAddrs2: number;
+// }
+// type a = Test2;
+
+// const b: keyof Test2 = {
+//   getAddrs() {},
+// };
+// type GetType<T> = T extends (...arg: infer P) => void ? P : string;
+// type StateType = GetType<typeof Test>;
+// const a = new Test();
+const res = useHttpDecorator<typeof Test>(Test);
 console.log(res);
 export default res;
